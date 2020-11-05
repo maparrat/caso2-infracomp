@@ -156,11 +156,11 @@ public class NuevoThread extends Thread {
 		else if(c2 != ' ' && c3 != ' '&& c4 != ' '&& c5 != ' '&& c6 != ' '&& c7 != 'z')
 		{
 			c7++;
-		
+
 		}
 		else if(c2 == 'z' && c3 == 'z'&& c4 == 'z'&& c5 == 'z'&& c6 == 'z'&& c7 == ' ')
 		{
-			
+
 			c2='a';
 			c3='a';
 			c4='a';
@@ -170,7 +170,7 @@ public class NuevoThread extends Thread {
 		}
 		else if(c2 != ' ' && c3 == 'z'&& c4 == 'z'&& c5 == 'z'&& c6 == 'z'&& c7 == ' ')
 		{
-			
+
 			c2++;
 			c3='a';
 			c4='a';
@@ -179,7 +179,7 @@ public class NuevoThread extends Thread {
 		}
 		else if(c2 != ' ' && c3 != ' '&& c4 == 'z'&& c5 == 'z'&& c6 == 'z'&& c7 == ' ')
 		{
-			
+
 			c3++;
 			c4='a';
 			c5='a';
@@ -187,32 +187,32 @@ public class NuevoThread extends Thread {
 		}
 		else if(c2 != ' ' && c3 != ' '&& c4 != ' '&& c5 == 'z'&& c6 == 'z'&& c7 == ' ')
 		{
-			
+
 			c4++;
 			c5='a';
 			c6='a';
 		}
 		else if(c2 != ' ' && c3 != ' '&& c4 != ' '&& c5 != ' '&& c6 == 'z'&& c7 == ' ')
 		{
-			
+
 			c5++;
 			c6='a';
 		}
 		else if(c2 != ' ' && c3 != ' '&& c4 != ' '&& c5 != ' '&& c6 != 'z'&& c7 == ' ')
 		{
-			
+
 			c6++;
-			
+
 		}
 		else if(c2 == 'z' && c3 == 'z'&& c4 == 'z'&& c5 == 'z'&& c6 == ' '&& c7 == ' ')
 		{
-			
+
 			c2='a';
 			c3='a';
 			c4='a';
 			c5='a';
 			c6='a';
-			
+
 		}
 		else if(c2 != ' ' && c3 == 'z'&& c4 == 'z'&& c5 == 'z'&& c6 == ' '&& c7 == ' ')
 		{
@@ -248,7 +248,7 @@ public class NuevoThread extends Thread {
 			c2++;
 			c3='a';
 			c4='a';
-		
+
 		}
 		else if(c2 != ' ' && c3 != ' '&& c4 == 'z'&& c5 == ' '&& c6 == ' '&& c7 == ' ')
 		{
@@ -264,14 +264,14 @@ public class NuevoThread extends Thread {
 			c2='a';
 			c3='a';
 			c4='a';
-			
+
 		}
 		else if(c2 == 'z' && c3 == 'z'&& c4 == ' '&& c5 == ' '&& c6 == ' '&& c7 == ' ')
 		{
 			c2='a';
 			c3='a';
 			c4='a';
-			
+
 		}
 		else if(c2 != ' ' && c3 == 'z'&& c4 == ' '&& c5 == ' '&& c6 == ' '&& c7 == ' ')
 		{
@@ -281,27 +281,29 @@ public class NuevoThread extends Thread {
 		else if(c2 != ' ' && c3 != 'z'&& c4 == ' '&& c5 == ' '&& c6 == ' '&& c7 == ' ')
 		{
 			c3++;
-			
+
 		}
-		
 		else if(c2 == 'z' && c3 == ' '&& c4 == ' '&& c5 == ' '&& c6 == ' '&& c7 == ' ')
 		{
 			c2='a';
 			c3='a';
-			
+
 		}
-		else if(c2 <= 'a' && c3 == ' '&& c4 == ' '&& c5 == ' '&& c6 == ' '&& c7 == ' ')
+		else if(c2 != ' ' && c3 == ' '&& c4 == ' '&& c5 == ' '&& c6 == ' '&& c7 == ' '&& c2 != 'z')
 		{
 			c2++;
-			
+
 		}
+		
 		else {
 			c2 = 'a';
 		}
-	
-	}
 
+	}
 	
+
+
+
 	public String darLetra() {
 		return letra;
 	}
