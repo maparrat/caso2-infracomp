@@ -14,6 +14,7 @@ package proyecto2;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Scanner;
+import java.util.concurrent.TimeUnit;
 
 /**
  ** Clase que se encarga de recibir por consola el mensaje a encritar y el
@@ -33,17 +34,21 @@ public class Main {
 	public static boolean encontrado = false;
 
 	/**
-	 * Atributo que representa el texto que el metopdo encontro en fuerza bruta
+	 * Atributo que representa el texto que el metodo encontro en fuerza bruta
 	 */
 	public static String textoRespuesta = null;
 
 	/**
-	 * Atributo que representa hash generado
+	 * Atributo que representa el hash generado
 	 */
-	public static String hashG = null;
-
+	public static String hashGenerado = null;
+	/**
+	 * Alfabeto que se va a considerar para las contrasenias
+	 */
 	public static char[] ALFABETO = "abcdefghijklmnñopqrstuvwxyz".toCharArray();
-
+	/**
+	 * Tamanio máximo de caracteres que tendrá una contrasenia
+	 */
 	public static final int MAX_TAMANIO = 7;
 
 	// -----------------------------------------------------------------------------------------------------------
@@ -51,25 +56,10 @@ public class Main {
 	// -----------------------------------------------------------------------------------------------------------
 
 	/**
-	 * Metodo que imprime un arreglo de bytes y los imprime en consiola de forma
-	 * ordenada
-	 * 
-	 * @param contenido cadena de bytes que se desea mostrar en consola
-	 */
-	public static void imprimir(byte[] contenido) {
-		int i = 0;
-
-		for (; i < contenido.length - 1; i++) {
-			System.out.print(contenido[i] + " ");
-		}
-		System.out.println(contenido[i] + " ");
-	}
-
-	/**
 	 * Metodo generar_codigo. Recibe una cadena de texto y una cadena con el nombre
 	 * de un algoritmo. Retorna el codigo criptogrqfico de hash correspondiente.}
-	 * <b>pre: </b> El algoritmo debe pertenecer a [ MD5, SHA256,SHA384, SHA512]
-	 * <b>pre: </b> El texto debe ser de maximo 7 letras y deben estar entre a y z
+	 * <b>pre: </b> El algoritmo debe pertenecer a [ MD5, SHA256, SHA384, SHA512]
+	 * <b>pre: </b> El texto debe ser de maximo 7 letras y deben estar entre a y z (27 letras)
 	 * 
 	 * @param texto     que se decea cifrar por hash correspondiente
 	 * @param algoritmo con el que se desea cifrar
@@ -101,10 +91,9 @@ public class Main {
 	/**
 	 * Recibe un codigo criptografico de hash y una cadena con el nombre de un
 	 * algoritmo. Retorna la cadena que se usa para generar dicho codigo (null si no
-	 * encuentra una respuesta). <b>pre: </b> El algoritmo debe pertenecer a [ MD5,
-	 * SHA256,SHA384, SHA512] <b>pre: </b> El algoritmo debe ser el mismo con el que
-	 * se cifro hash_texto_cifrado
-	 * 
+	 * encuentra una respuesta). 
+	 * <b>pre: </b> El algoritmo debe pertenecer a [ MD5, SHA256,SHA384, SHA512] 
+	 * <b>pre: </b> El algoritmo debe ser el mismo con el que se cifro hash_texto_cifrado
 	 * @param hash_texto_cifrado que se usa para decifrar el mensage original
 	 * @param algoritmo          que se uso para cifrar elm hash_texto_cifrado
 	 * @return
@@ -145,8 +134,10 @@ public class Main {
 		System.out.println("Ingrese el texto a cifrar: ");
 
 		String texto_a_cifrar = myObj.nextLine();
-
-		System.out.println("Ingrese el algoritmo: ");
+		
+		System.out.println("Ingrese el algoritmo deseado: ");
+		
+		System.out.println("(Escribir uno de los siguientes algoritmos: MD5, SHA256, SHA384, SHA512)");
 
 		String algoritmo = myObj.nextLine();
 
@@ -158,7 +149,7 @@ public class Main {
 
 		String hash_generado = generar_codigo(texto_a_cifrar, algoritmo);
 
-		hashG = hash_generado;
+		hashGenerado = hash_generado;
 
 		System.out.println(hash_generado);
 
@@ -166,17 +157,19 @@ public class Main {
 
 		System.out.println("Mensaje decifrado a partir del hash y el algoritmo: ");
 
-		long tiempo_inicial = System.nanoTime();
+		long tiempo_inicial = System.currentTimeMillis();
+		;
 
 		System.out.println(identificar_entrada(hash_generado, algoritmo));
 
-		long tiempo_final = System.nanoTime();
+		long tiempo_final = System.currentTimeMillis();
 
 		System.out.println("- - - - - - - - - - - - - - - - - ");
 
-		double tiempo_total = (tiempo_final - tiempo_inicial) / 1000000000;
+		long tiempo_total = (tiempo_final - tiempo_inicial);
 
-		System.out.println("Tiempo tomado: " + tiempo_total + "   segundos ");
+		System.out.println("Tiempo tomado: " + TimeUnit.MILLISECONDS.toSeconds(tiempo_total) + "."
+				+ TimeUnit.MILLISECONDS.toMillis(tiempo_total) + "   segundos ");
 
 		myObj.close();
 
