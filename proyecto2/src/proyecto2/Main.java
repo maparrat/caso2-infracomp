@@ -56,7 +56,7 @@ public class Main {
 	/**
 	 * Alfabeto que se va a considerar para las contrasenias
 	 */
-	public static char[] ALFABETO = "abcdefghijklmñopqrstuvwxyz".toCharArray();
+	public static char[] ALFABETO = "abcdefghijklmnÃ±opqrstuvwxyz".toCharArray();
 	
 	/**
 	 * total de datos recopilados
@@ -118,7 +118,9 @@ public class Main {
 		
 		int tamanioSubespacio= (int)ALFABETO.length/pNumeroThreads;
 		
-		ArrayList<char[]> limites = new ArrayList<char[]>(); 
+		ArrayList<char[]> limites = new ArrayList<char[]>();
+		ArrayList<int[]> posiciones = new ArrayList<int[]>(); 
+		
 		for (int i = 0; i < pNumeroThreads; i++) {
 			
 			if(i == (pNumeroThreads-1))
@@ -126,20 +128,26 @@ public class Main {
 				char limiteInicial = ALFABETO[i*tamanioSubespacio];
 				char limiteFinal = ALFABETO[ALFABETO.length-1];
 				char[] limite = {limiteInicial,limiteFinal};
+				int[] posicion = {(i*tamanioSubespacio), (ALFABETO.length-1)};
+				
 				limites.add(limite);
+				posiciones.add(posicion);
 			}
 			else {
 				char limiteInicial = ALFABETO[i*tamanioSubespacio];
-				int numeroLetrafinal= ((i*tamanioSubespacio)+(tamanioSubespacio-1));
+				int numeroLetrafinal= ((i*tamanioSubespacio)+(tamanioSubespacio));
 				char limiteFinal = ALFABETO[numeroLetrafinal];
 	
 				char[] limite = {limiteInicial,limiteFinal};
+				int[] posicion = {(i*tamanioSubespacio), ((i*tamanioSubespacio)+(tamanioSubespacio))};
+				
 				limites.add(limite);
+				posiciones.add(posicion);
 			}
 		}
 		
 		for (int i = 0; i < pNumeroThreads; i++) {
-			NuevoThread thread_nuevo = new NuevoThread(algoritmo, 7,limites.get(i)[0],limites.get(i)[1]);
+			NuevoThread thread_nuevo = new NuevoThread(algoritmo, limites.get(i)[0],limites.get(i)[1], posiciones.get(i)[0], posiciones.get(i)[1]);
 			threads[i] = thread_nuevo;
 			thread_nuevo.start();
 		

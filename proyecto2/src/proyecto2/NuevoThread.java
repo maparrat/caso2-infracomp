@@ -27,13 +27,13 @@ public class NuevoThread extends Thread {
 	 */
 	private String algoritmo;
 
-	/**
-	 * Atributo que representa la cantidad de caracteres del thread especificado
-	 */
-	private int cantidadCaracteres;
-
 	private final StringBuilder limiteInicial;
+
+	private int posicionInicial;
+
 	private final StringBuilder limiteFinal;
+
+	private int posicionFinal;
 
 	// ---------------------------------------------------------------------------------------------------------
 	// CONSTRUICTOR
@@ -45,11 +45,14 @@ public class NuevoThread extends Thread {
 	 *                           (numero entre 1 y 7)
 	 * @param pAlgoritmo         algoritmo que fue usado para crear el hash
 	 */
-	public NuevoThread(String pAlgoritmo, int cantidadCaracteres,char plimiteInicial, char plimitefinal) {
+	public NuevoThread(String pAlgoritmo, char plimiteInicial, char plimitefinal, int pPosicionInicial,
+			int pPosicionFinal) {
 		this.algoritmo = pAlgoritmo;
-		this.cantidadCaracteres = cantidadCaracteres;
-		this.limiteFinal= new StringBuilder();
-		this.limiteInicial= new StringBuilder();
+		this.limiteFinal = new StringBuilder();
+		this.limiteInicial = new StringBuilder();
+		this.posicionInicial = pPosicionInicial;
+		this.posicionFinal = pPosicionFinal;
+
 		for (int i = 0; i < 7; i++) {
 			this.limiteInicial.append(plimiteInicial);
 			this.limiteFinal.append(plimitefinal);
@@ -66,8 +69,9 @@ public class NuevoThread extends Thread {
 	 */
 	public void run() {
 		try {
-			
-			fuerza_bruta(limiteInicial, 6);
+
+			fuerza_bruta(limiteInicial, 1);
+			System.out.println("acabe");
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
@@ -76,20 +80,21 @@ public class NuevoThread extends Thread {
 	/**
 	 * Metodo que realiza las comparaciones enrtre el hash creado y el hash real
 	 * para cada posible combiacion de caracteres con el lenght especificado.
-	 * <post>: si encuentra un hash igual al hash dado, corresponde al texto encontrado y finaliza la ejecucion 
-	 * @param cadena_actual representa la cadena evaluada actualmente, una de todas las posibles combinaciones
-	 * @param letra_posicion_actual   representa la posicion de la letra actual (a-z)
+	 * <post>: si encuentra un hash igual al hash dado, corresponde al texto
+	 * encontrado y finaliza la ejecucion
+	 * 
+	 * @param cadena_actual         representa la cadena evaluada actualmente, una
+	 *                              de todas las posibles combinaciones
+	 * @param letra_posicion_actual representa la posicion de la letra actual (a-z)
 	 * @throws InterruptedException
 	 */
-	public synchronized void fuerza_bruta(StringBuilder cadena_actual, int letra_posicion_actual) throws InterruptedException {
-	
-		if ((Main.encontrado == false) && ((cadena_actual.toString().equals(limiteFinal.toString())) == false) ) {
+	public synchronized void fuerza_bruta(StringBuilder cadena_actual, int letra_posicion_actual)
+			throws InterruptedException {
 
-			System.out.println("CADENA: "+ cadena_actual);
-			System.out.println("LIMITEF "+ this.limiteFinal);
-			System.out.println("------------------------");
+		if ((Main.encontrado == false) && ((cadena_actual.toString().equals(limiteFinal.toString())) == false)) {
+
 			if (letra_posicion_actual == cadena_actual.length()) {
-				
+
 				String hash_evaluado = Main.generar_codigo(cadena_actual.toString(), algoritmo);
 
 				if (Main.hashGenerado.equals(hash_evaluado)) {
@@ -101,8 +106,15 @@ public class NuevoThread extends Thread {
 				return;
 			}
 
-			for (int i = 0; i <( Main.ALFABETO.length) && (!Main.encontrado) && ( cadena_actual.toString().equals(limiteFinal.toString()) == false); i++) {
-				
+			if (cadena_actual.toString().contains("zzzzzz") && cadena_actual.charAt(0) != 'z') {
+				char primero = cadena_actual.charAt(0);
+				primero++;
+				System.out.println(primero);
+				cadena_actual.setCharAt(0, primero);
+			}
+
+			for (int i = 0; i < Main.ALFABETO.length && !Main.encontrado; i++) {
+
 				char letter = Main.ALFABETO[i];
 				cadena_actual.setCharAt(letra_posicion_actual, letter);
 				fuerza_bruta(cadena_actual, letra_posicion_actual + 1);
