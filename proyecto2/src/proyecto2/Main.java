@@ -11,10 +11,21 @@
  */
 package proyecto2;
 
+
+
+import java.lang.management.ManagementFactory;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
+
+import javax.management.Attribute;
+import javax.management.AttributeList;
+import javax.management.MBeanServer;
+import javax.management.ObjectName;
+
+
 
 /**
  ** Clase que se encarga de recibir por consola el mensaje a encritar y el
@@ -50,6 +61,10 @@ public class Main {
 	 * Tamanio máximo de caracteres que tendrá una contrasenia
 	 */
 	public static final int MAX_TAMANIO = 7;
+	/**
+	 * total de datos recopilados
+	 */
+	public static ArrayList<Double> consumos;
 
 	// -----------------------------------------------------------------------------------------------------------
 	// Metodos
@@ -109,6 +124,23 @@ public class Main {
 			thread_nuevo.start();
 		}
 
+		new Thread(
+				new Runnable() {
+					public void run() {
+						try {
+							while(!encontrado){
+								double cpu = getPromedio();
+								consumos.add(cpu);
+								Thread.sleep(300000000);
+							}
+
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+				}).start();
+
 		for (Thread thread : threads) {
 			thread.join();
 		}
@@ -125,18 +157,19 @@ public class Main {
 	 * identificar_entrada, ademas debe reportar el tiempo del algoritmo
 	 * 
 	 * @param args
-	 * @throws InterruptedException
+	 * @throws Exception 
 	 */
-	public static void main(String[] args) throws InterruptedException {
+	public static void main(String[] args) throws Exception {
 
+		consumos = new ArrayList<Double>();
 		Scanner myObj = new Scanner(System.in);
 
 		System.out.println("Ingrese el texto a cifrar: ");
 
 		String texto_a_cifrar = myObj.nextLine();
-		
+
 		System.out.println("Ingrese el algoritmo deseado: ");
-		
+
 		System.out.println("(Escribir uno de los siguientes algoritmos: MD5, SHA256, SHA384, SHA512)");
 
 		String algoritmo = myObj.nextLine();
@@ -170,9 +203,47 @@ public class Main {
 
 		System.out.println("Tiempo tomado: " + TimeUnit.MILLISECONDS.toSeconds(tiempo_total) + "."
 				+ TimeUnit.MILLISECONDS.toMillis(tiempo_total) + "   segundos ");
+		double cpu = getPromedio();
+		System.out.println("El porcentaje de CPU fue de: "+ cpu+"%");
 
 		myObj.close();
 
+	}
+
+	/*
+	 * Metodo que crea el promedio del consumo del cpu
+	 * return el promedio del consumo del algoritmo
+	 */
+	public static double getPromedio()
+	{
+		Double rta = (double) 0;
+		for(int i = 0; i< consumos.size(); i++)
+		{
+			rta += consumos.get(i); 
+		}
+		if(consumos.size() != 0)
+		{
+			rta = rta/consumos.size();
+		}
+		return rta;
+	}
+	/**
+	 * Retorna el porcentaje de CPU usado durante la ejecucion
+	 * @return
+	 * @throws Exception
+	 */
+	public static double getSystemCpuLoad() throws Exception {
+
+		MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
+		ObjectName name = ObjectName.getInstance("java.lang:type=OperatingSystem");
+		AttributeList list = mbs.getAttributes(name, new String[]{ "SystemCpuLoad" });
+		if (list.isEmpty()) return Double.NaN;
+		Attribute att = (Attribute)list.get(0);
+		Double value = (Double)att.getValue();
+		// usually takes a couple of seconds before we get real values
+		if (value == -1.0) return Double.NaN;
+		// returns a percentage value with 1 decimal point precision
+		return ((int)(value * 1000) / 10.0);
 	}
 
 }
