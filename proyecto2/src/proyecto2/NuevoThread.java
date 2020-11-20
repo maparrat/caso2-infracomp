@@ -32,6 +32,9 @@ public class NuevoThread extends Thread {
 	 */
 	private int cantidadCaracteres;
 
+	private final StringBuilder limiteInicial;
+	private final StringBuilder limiteFinal;
+
 	// ---------------------------------------------------------------------------------------------------------
 	// CONSTRUICTOR
 	// ------------------------------------------------------------------------------------------------------
@@ -42,9 +45,16 @@ public class NuevoThread extends Thread {
 	 *                           (numero entre 1 y 7)
 	 * @param pAlgoritmo         algoritmo que fue usado para crear el hash
 	 */
-	public NuevoThread(String pAlgoritmo, int cantidadCaracteres) {
+	public NuevoThread(String pAlgoritmo, int cantidadCaracteres,char plimiteInicial, char plimitefinal) {
 		this.algoritmo = pAlgoritmo;
 		this.cantidadCaracteres = cantidadCaracteres;
+		this.limiteFinal= new StringBuilder();
+		this.limiteInicial= new StringBuilder();
+		for (int i = 0; i < 7; i++) {
+			this.limiteInicial.append(plimiteInicial);
+			this.limiteFinal.append(plimitefinal);
+		}
+
 	}
 
 	// -----------------------------------------------------------------------------------------------------------
@@ -56,12 +66,8 @@ public class NuevoThread extends Thread {
 	 */
 	public void run() {
 		try {
-			StringBuilder sb = new StringBuilder();
-
-			for (int i = 0; i <= cantidadCaracteres; i++) {
-				sb.append(" ");
-			}
-			fuerza_bruta(sb, 0);
+			
+			fuerza_bruta(limiteInicial, 6);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
@@ -76,14 +82,18 @@ public class NuevoThread extends Thread {
 	 * @throws InterruptedException
 	 */
 	public synchronized void fuerza_bruta(StringBuilder cadena_actual, int letra_posicion_actual) throws InterruptedException {
+	
+		if ((Main.encontrado == false) && ((cadena_actual.toString().equals(limiteFinal.toString())) == false) ) {
 
-		if (Main.encontrado == false) {
-
+			System.out.println("CADENA: "+ cadena_actual);
+			System.out.println("LIMITEF "+ this.limiteFinal);
+			System.out.println("------------------------");
 			if (letra_posicion_actual == cadena_actual.length()) {
-
+				
 				String hash_evaluado = Main.generar_codigo(cadena_actual.toString(), algoritmo);
 
 				if (Main.hashGenerado.equals(hash_evaluado)) {
+					System.out.println("SI ENTRE SOLUCION");
 					Main.encontrado = true;
 					Main.textoRespuesta = cadena_actual.toString();
 				}
@@ -91,7 +101,8 @@ public class NuevoThread extends Thread {
 				return;
 			}
 
-			for (int i = 0; i < Main.ALFABETO.length && !Main.encontrado; i++) {
+			for (int i = 0; i <( Main.ALFABETO.length) && (!Main.encontrado) && ( cadena_actual.toString().equals(limiteFinal.toString()) == false); i++) {
+				
 				char letter = Main.ALFABETO[i];
 				cadena_actual.setCharAt(letra_posicion_actual, letter);
 				fuerza_bruta(cadena_actual, letra_posicion_actual + 1);

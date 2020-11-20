@@ -56,11 +56,8 @@ public class Main {
 	/**
 	 * Alfabeto que se va a considerar para las contrasenias
 	 */
-	public static char[] ALFABETO = "abcdefghijklmnñopqrstuvwxyz".toCharArray();
-	/**
-	 * Tamanio máximo de caracteres que tendrá una contrasenia
-	 */
-	public static final int MAX_TAMANIO = 7;
+	public static char[] ALFABETO = "abcdefghijklm�opqrstuvwxyz".toCharArray();
+	
 	/**
 	 * total de datos recopilados
 	 */
@@ -114,16 +111,41 @@ public class Main {
 	 * @return
 	 * @throws InterruptedException
 	 */
-	public static String identificar_entrada(String hash_texto_cifrado, String algoritmo) throws InterruptedException {
+	public static String identificar_entrada(String hash_texto_cifrado, String algoritmo,int pNumeroThreads) throws InterruptedException {
 
-		Thread[] threads = new Thread[MAX_TAMANIO];
-
-		for (int i = 0; i < MAX_TAMANIO; i++) {
-			NuevoThread thread_nuevo = new NuevoThread(algoritmo, i);
+		Thread[] threads = new Thread[pNumeroThreads];
+		
+		
+		int tamanioSubespacio= (int)ALFABETO.length/pNumeroThreads;
+		
+		ArrayList<char[]> limites = new ArrayList<char[]>(); 
+		for (int i = 0; i < pNumeroThreads; i++) {
+			
+			if(i == (pNumeroThreads-1))
+			{
+				char limiteInicial = ALFABETO[i*tamanioSubespacio];
+				char limiteFinal = ALFABETO[ALFABETO.length-1];
+				char[] limite = {limiteInicial,limiteFinal};
+				limites.add(limite);
+			}
+			else {
+				char limiteInicial = ALFABETO[i*tamanioSubespacio];
+				int numeroLetrafinal= ((i*tamanioSubespacio)+(tamanioSubespacio-1));
+				char limiteFinal = ALFABETO[numeroLetrafinal];
+	
+				char[] limite = {limiteInicial,limiteFinal};
+				limites.add(limite);
+			}
+		}
+		
+		for (int i = 0; i < pNumeroThreads; i++) {
+			NuevoThread thread_nuevo = new NuevoThread(algoritmo, 7,limites.get(i)[0],limites.get(i)[1]);
 			threads[i] = thread_nuevo;
 			thread_nuevo.start();
+		
 		}
 
+		
 		new Thread(
 				new Runnable() {
 					public void run() {
@@ -163,7 +185,11 @@ public class Main {
 
 		consumos = new ArrayList<Double>();
 		Scanner myObj = new Scanner(System.in);
+		
+		System.out.println("Ingrese el numero de threads: ");
 
+		int numeroThreads = Integer.parseInt(myObj.nextLine());
+		
 		System.out.println("Ingrese el texto a cifrar: ");
 
 		String texto_a_cifrar = myObj.nextLine();
@@ -193,7 +219,7 @@ public class Main {
 		long tiempo_inicial = System.currentTimeMillis();
 		;
 
-		System.out.println(identificar_entrada(hash_generado, algoritmo));
+		System.out.println(identificar_entrada(hash_generado, algoritmo,numeroThreads));
 
 		long tiempo_final = System.currentTimeMillis();
 
