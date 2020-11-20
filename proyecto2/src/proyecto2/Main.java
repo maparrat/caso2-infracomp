@@ -30,7 +30,7 @@ import javax.management.ObjectName;
 /**
  ** Clase que se encarga de recibir por consola el mensaje a encritar y el
  * algoritmo de hash para esto, ademas se encarga de generar codigo y de
- * identificar su entrada por fuerza bruta
+ * identificar su entrada por fuerza bruta ademas implementa el monitor de tiempo de ejecucion y de consumo promedio de cpu
  */
 public class Main {
 
@@ -59,7 +59,7 @@ public class Main {
 	public static char[] ALFABETO = "abcdefghijklmnñopqrstuvwxyz".toCharArray();
 	
 	/**
-	 * total de datos recopilados
+	 * total de datos recopilados del consumo de CPU
 	 */
 	public static ArrayList<Double> consumos;
 
@@ -170,7 +170,8 @@ public class Main {
 	 * Metodo encargado de solicitar por consola el texto a cifrar y el algotimo,
 	 * ademas este se encarga de llamar a los metodos generar_codigo e
 	 * identificar_entrada, ademas debe reportar el tiempo del algoritmo
-	 * 
+	 *  ademas implementa el monitor de tiempo de ejecucion y de consumo promedio de cpu
+	 *  Esto lo hace tomando una muestra cada 5 minutos y promediandolos al final de la ejecucion
 	 * @param args
 	 * @throws Exception 
 	 */
@@ -254,7 +255,7 @@ public class Main {
 
 	/*
 	 * Metodo que crea el promedio del consumo del cpu
-	 * return el promedio del consumo del algoritmo
+	 * @return el promedio del consumo del algoritmo
 	 */
 	public static double getPromedio()
 	{

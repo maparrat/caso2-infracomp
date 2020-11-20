@@ -40,10 +40,11 @@ public class NuevoThread extends Thread {
 	// ------------------------------------------------------------------------------------------------------
 	/**
 	 * Metodo constructor del thread que hace fuerza bruta en un rango especifico
-	 * 
-	 * @param cantidadCaracteres los caracteres que el thread actual va a manejar
-	 *                           (numero entre 1 y 7)
-	 * @param pAlgoritmo         algoritmo que fue usado para crear el hash
+	 * @param pAlgoritmo algoritmo con el que se cifro estre debe ser MD5,SHA512 o SHA256
+	 * @param plimiteInicial letra que define el limmite superior del espacio de busqueda de este thread
+	 * @param plimitefinal letra que define el limmite inferior del espacio de busqueda de este thread
+	 * @param pPosicionInicial debe ser igual a 7
+	 * @param pPosicionFinal debe ser la letra
 	 */
 	public NuevoThread(String pAlgoritmo, char plimiteInicial, char plimitefinal, int pPosicionInicial,
 			int pPosicionFinal) {
