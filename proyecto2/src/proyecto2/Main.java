@@ -115,7 +115,7 @@ public class Main {
 
 		Thread[] threads = new Thread[pNumeroThreads];
 		
-		
+	
 		int tamanioSubespacio= (int)ALFABETO.length/pNumeroThreads;
 		
 		ArrayList<char[]> limites = new ArrayList<char[]>();
@@ -154,22 +154,7 @@ public class Main {
 		}
 
 		
-		new Thread(
-				new Runnable() {
-					public void run() {
-						try {
-							while(!encontrado){
-								double cpu = getPromedio();
-								consumos.add(cpu);
-								Thread.sleep(300000000);
-							}
-
-						} catch (InterruptedException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-					}
-				}).start();
+		
 
 		for (Thread thread : threads) {
 			thread.join();
@@ -190,7 +175,30 @@ public class Main {
 	 * @throws Exception 
 	 */
 	public static void main(String[] args) throws Exception {
+		
+		new Thread(
+				new Runnable() {
+					public void run() {
+						try {
+							while(!encontrado){
+								double cpu=0;
+								try {
+									cpu = getSystemCpuLoad();
+								} catch (Exception e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
+								//System.out.println(cpu);
+								consumos.add(cpu);
+								Thread.sleep(300000);
+							}
 
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+				}).start();
 		consumos = new ArrayList<Double>();
 		Scanner myObj = new Scanner(System.in);
 		
